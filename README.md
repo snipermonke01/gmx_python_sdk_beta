@@ -351,3 +351,8 @@ pool_tvl = stats_object.get_pool_tvl(chain=chain)
 
 - Avalanche chain not fully tested
 - A high rate limit RPC is required to read multiple sets of stats successively
+
+### Planned Updates
+
+- Limit Orders
+- Implement Try/Except for rate limit errors on RPCs
