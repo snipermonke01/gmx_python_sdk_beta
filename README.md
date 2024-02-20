@@ -3,18 +3,18 @@
 
 A python based SDK developed for interacting with GMX v2
 
-- [Requirements](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#requirements)
-- [Config File Setup](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#config-file-setup)
-- [Example Scripts](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#example-scripts)
-- [General Usage](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#general-usage)
-    - [Increase Position](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#increase-position)
-    - [Decrease Position](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#decrease-position)
-    - [Estimate Swap Output](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#estimate-swap-output)
-    - [Helper Scripts](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#helper-scripts)
-        - [Order Argument Parser](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#order-argument-parser)
-        - [Closing Positions](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#closing-positions)
-    - [GMX Stats](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#gmx-stats)
-- [Known Limitations](https://github.com/snipermonke01/gmx_sdk/tree/main?tab=readme-ov-file#known-limitations)
+- [Requirements](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#requirements)
+- [Config File Setup](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#config-file-setup)
+- [Example Scripts](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#example-scripts)
+- [General Usage](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#general-usage)
+    - [Increase Position](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#increase-position)
+    - [Decrease Position](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#decrease-position)
+    - [Estimate Swap Output](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#estimate-swap-output)
+    - [Helper Scripts](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#helper-scripts)
+        - [Order Argument Parser](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#order-argument-parser)
+        - [Closing Positions](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#closing-positions)
+    - [GMX Stats](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#gmx-stats)
+- [Known Limitations](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main?tab=readme-ov-file#known-limitations)
 
 
 ## Requirements
@@ -39,7 +39,7 @@ pip install numerize
 The codebase is designed around the usage of web3py [6.10.0](https://web3py.readthedocs.io/en/stable/releases.html#web3-py-v6-10-0-2023-09-21), and will not work with older versions and has not been tested with the latest version.
 ## Config File Setup
 
-[Config file](https://github.com/snipermonke01/gmx_sdk/blob/main/config.yaml) must set up before usage. For stats based operations, you will need only an RPC but for execution you need to save both a wallet address and the private key of that wallet. 
+[Config file](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/config.yaml) must set up before usage. For stats based operations, you will need only an RPC but for execution you need to save both a wallet address and the private key of that wallet. 
 
 ```yaml
 arbitrum:
@@ -52,21 +52,21 @@ private_key: private_key
 user_wallet_address: wallet_address
 ```
 
-The example script [setting_config.py](https://github.com/snipermonke01/gmx_sdk/blob/main/setting_config.py) can be viewed for demonstration on how to import config and update with new details from script.
+The example script [setting_config.py](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/setting_config.py) can be viewed for demonstration on how to import config and update with new details from script.
 
 ## Example Scripts
 
 There are currently 4 example scripts which can be run:
 
-- [identify_farming_opportunities.py](https://github.com/snipermonke01/gmx_sdk/blob/main/identify_farming_opportunities.py)
-- [get_gmx_stats.py](https://github.com/snipermonke01/gmx_sdk/blob/main/get_gmx_stats.py)
-- [create_increase_order.py](https://github.com/snipermonke01/gmx_sdk/blob/main/create_increase_order.py)
-- [create_decrease_order.py](https://github.com/snipermonke01/gmx_sdk/blob/main/create_decrease_order.py)
+- [identify_farming_opportunities.py](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/identify_farming_opportunities.py)
+- [get_gmx_stats.py](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/get_gmx_stats.py)
+- [create_increase_order.py](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/create_increase_order.py)
+- [create_decrease_order.py](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/create_decrease_order.py)
 
 
 ## General Usage
 
-### [Increase Position](https://github.com/snipermonke01/gmx_sdk/blob/main/create_increase_order.py)
+### [Increase Position](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/create_increase_order.py)
 
 The following block demonstrates how to open (or increase) a position:
 
@@ -103,7 +103,7 @@ order = IncreaseOrder(
 
 **swap_path** - *type list(str)*: a list of the GMX markets you will need to swap through if the starting token is different to the token you want to use as collateral
 
-### [Decrease Position](https://github.com/snipermonke01/gmx_sdk/blob/main/create_decrease_order.py)
+### [Decrease Position](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/create_decrease_order.py)
 
 The following block demonstrates how to close (or decrease) a position:
 
@@ -228,7 +228,7 @@ get_estimated_swap_output(
 
 To assist in argument formatting, there are a few helper functions:
 
-#### [Order Argument Parser](https://github.com/snipermonke01/gmx_sdk/blob/main/scripts/v2/order_argument_parser.py)
+#### [Order Argument Parser](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/scripts/v2/order_argument_parser.py)
 
 Human readable numbers can be parsed in a dictionary with the following keys/values which are processed by a class, OrderArgumentParser. This class should initialised with a bool to indicate is_increase, is_decrease, or is_swap, calling the method: "process_parameters_dictionary". This will output a dictionary containing the user input parameters reformatted to allow for successful order creation.
 
@@ -299,7 +299,7 @@ order_parameters = OrderArgumentParser(is_decrease=True).process_parameters_dict
 
 #### Closing positions
 
-Instead of passing the parameters to close a position, if you are aware of the market symbol and the direction of the trade you want to close you can pass these to [transform_open_position_to_order_parameters](https://github.com/snipermonke01/gmx_sdk/blob/main/get_positions.py#L46) after collecting all open positions using [get_positions](https://github.com/snipermonke01/gmx_sdk/blob/main/get_positions.py#L13). This will output a formatted dictionary which will close 100% of the defined position.
+Instead of passing the parameters to close a position, if you are aware of the market symbol and the direction of the trade you want to close you can pass these to [transform_open_position_to_order_parameters](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/get_positions.py#L46) after collecting all open positions using [get_positions](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/get_positions.py#L13). This will output a formatted dictionary which will close 100% of the defined position.
 
 ```python
 from get_positions import get_positions, transform_open_position_to_order_parameters
@@ -323,7 +323,7 @@ order_parameters = transform_open_position_to_order_parameters(
 
 ### GMX Stats
 
-A number of stats can be obtained using a wide range of scripts. The overview on how to call these can be found in [get_gmx_stats](https://github.com/snipermonke01/gmx_sdk/blob/main/get_gmx_stats.py). Each method returns a dictionary containing long/short information for a given chain. When initialising the class, pass to_json or to_csv as True to save the output to the [data store](https://github.com/snipermonke01/gmx_sdk/tree/main/data_store): 
+A number of stats can be obtained using a wide range of scripts. The overview on how to call these can be found in [get_gmx_stats](https://github.com/snipermonke01/gmx_python_sdk_beta/blob/main/get_gmx_stats.py). Each method returns a dictionary containing long/short information for a given chain. When initialising the class, pass to_json or to_csv as True to save the output to the [data store](https://github.com/snipermonke01/gmx_python_sdk_beta/tree/main/data_store): 
 
 ```python
 from get_gmx_stats import GetGMXv2Stats
