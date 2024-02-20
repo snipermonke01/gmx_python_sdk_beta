@@ -32,7 +32,7 @@ if close_by_user_input:
         "slippage_percent": 0.03
     }
 
-    order_parameters = OrderArgumentParser(is_decrease=True).process_parameters_dictionary(parameters)
+    order_parameters = OrderArgumentParser().process_parameters_dictionary(parameters)
 
 
 # This is an example using the get_positions script to find open positions and close using this

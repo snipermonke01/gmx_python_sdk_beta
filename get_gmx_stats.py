@@ -111,9 +111,9 @@ class GetGMXv2Stats:
 
 if __name__ == "__main__":
 
-    to_json = True
+    to_json = False
     to_csv = False
-    chain = "arbitrum"
+    chain = "avalanche"
 
     stats_object = GetGMXv2Stats(
         to_json=to_json,

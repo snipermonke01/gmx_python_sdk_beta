@@ -25,7 +25,7 @@ parameters = {
     "slippage_percent": 0.03
 }
 
-order_parameters = OrderArgumentParser(is_decrease=True).process_parameters_dictionary(parameters)
+order_parameters = OrderArgumentParser().process_parameters_dictionary(parameters)
 
 
 order = DecreaseOrder(

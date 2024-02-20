@@ -52,6 +52,8 @@ private_key: private_key
 user_wallet_address: wallet_address
 ```
 
+The example script [setting_config.py](https://github.com/snipermonke01/gmx_sdk/blob/main/setting_config.py) can be viewed for demonstration on how to import config and update with new details from script.
+
 ## Example Scripts
 
 There are currently 4 example scripts which can be run:
@@ -351,8 +353,3 @@ pool_tvl = stats_object.get_pool_tvl(chain=chain)
 
 - Avalanche chain not fully tested
 - A high rate limit RPC is required to read multiple sets of stats successively
-
-### Planned Updates
-
-- Limit Orders
-- Implement Try/Except for rate limit errors on RPCs

@@ -31,6 +31,7 @@ logging.basicConfig(
 )
 
 
+# Functions required for multithreading
 def execute_call(call):
     return call.call()
 
@@ -132,8 +133,67 @@ contract_map = {
 }
 
 
-def get_config():
-    config = yaml.safe_load(open(os.path.join(base_dir, "config.yaml")))
+class Config:
+
+    def __init__(
+            self,
+            filepath: str = os.path.join(base_dir, "config.yaml")
+    ):
+        self.file_path = filepath
+        self.skeleton = {
+            'arbitrum': {
+                'rpc': None,
+                'chain_id': None
+            },
+            'avalanche': {
+                'rpc': None,
+                'chain_id': None
+            },
+            'private_key': None,
+            'user_wallet_address': None
+        }
+
+    def load_config(self):
+        try:
+            config = yaml.safe_load(open(os.path.join(base_dir, "config.yaml")))
+            return self.test_config_format(config)
+        except FileNotFoundError:
+            print(f"Config file '{self.file_path}' not found.\nLoading blank template!")
+            return self.skeleton
+
+    def set_config(self, config):
+        print(f"Setting config file: '{self.file_path}'")
+        with open(self.file_path, 'w') as file:
+            yaml.dump(config, file)
+
+    def test_config_format(self, config):
+
+        if config.keys() == self.skeleton.keys():
+            return config
+        else:
+            structure = """
+                {
+                'arbitrum': {
+                    'rpc': None,
+                    'chain_id': None
+                },
+                'avalanche': {
+                    'rpc': None,
+                    'chain_id': None
+                },
+                'private_key': None,
+                'user_wallet_address': None
+            }"""
+            raise Exception(
+                "Please make sure your config file matches the following structure:\n\n{}".format(
+                    structure
+                )
+            )
+
+
+def get_config(filepath: str = os.path.join(base_dir, "config.yaml")):
+
+    config = Config(filepath).load_config()
 
     if config['private_key'] is None:
         logging.warning("Private key not set!")
@@ -143,6 +203,9 @@ def get_config():
 
     if config['avalanche']['rpc'] is None:
         logging.warning("Avalanche RPC not set!")
+
+    if config['user_wallet_address'] is None:
+        logging.warning("Wallet address not set!")
 
     return config
 
@@ -160,6 +223,22 @@ def create_connection(rpc: str = None, chain: str = None):
 
 
 def convert_to_checksum_address(chain: str, address: str):
+    """
+    Convert a given address to checksum format
+
+    Parameters
+    ----------
+    chain : str
+        arbitrum or avalanche.
+    address : str
+        contract address.
+
+    Returns
+    -------
+    str
+        checksum formatted address.
+
+    """
 
     web3_obj = create_connection(chain=chain)
 
@@ -168,7 +247,23 @@ def convert_to_checksum_address(chain: str, address: str):
 
 def get_contract_object(web3_obj, contract_name: str, chain: str):
     """
-    Get the contract object from the contract map
+    Using a contract name, retrieve the address and api from contract map
+    and create a web3 contract object
+
+    Parameters
+    ----------
+    web3_obj : web3_obj
+        web3 connection.
+    contract_name : str
+        name of contract to use to map.
+    chain : str
+        arbitrum or avalanche.
+
+    Returns
+    -------
+    contract_obj
+        an instantied web3 contract object.
+
     """
     contract_address = contract_map[chain][contract_name]["contract_address"]
 
@@ -186,9 +281,17 @@ def get_contract_object(web3_obj, contract_name: str, chain: str):
     )
 
 
-def get_token_balance_contract(chain, contract_address):
+def get_token_balance_contract(chain: str, contract_address: str):
     """
-    Get the token balance contract object
+    Get the contract object required to query a users token balance
+
+    Parameters
+    ----------
+    chain : str
+        arbitrum or avalanche.
+    contract_address : str
+        the token to determine the balance of.
+
     """
     rpc = get_config()[chain]['rpc']
 
@@ -209,9 +312,20 @@ def get_token_balance_contract(chain, contract_address):
     )
 
 
-def get_tokens_address_dict(chain):
+def get_tokens_address_dict(chain: str):
     """
-    Get the token address dictionary
+    Query the GMX infra api for to generate dictionary of tokens available on v2
+
+    Parameters
+    ----------
+    chain : str
+        avalanche of arbitrum.
+
+    Returns
+    -------
+    token_address_dict : dict
+        dictionary containing available tokens to trade on GMX.
+
     """
 
     url = {
@@ -240,7 +354,16 @@ def get_tokens_address_dict(chain):
     return token_address_dict
 
 
-def get_reader_contract(chain):
+def get_reader_contract(chain: str):
+    """
+    Get a reader contract web3_obj for a given chain
+
+    Parameters
+    ----------
+    chain : str
+        avalanche or arbitrum.
+
+    """
     rpc = get_config()[chain]['rpc']
 
     web3_obj = create_connection(rpc)
@@ -251,7 +374,16 @@ def get_reader_contract(chain):
     )
 
 
-def get_event_emitter_contract(chain):
+def get_event_emitter_contract(chain: str):
+    """
+    Get a event emitter contract web3_obj for a given chain
+
+    Parameters
+    ----------
+    chain : str
+        avalanche or arbitrum.
+
+    """
     rpc = get_config()[chain]['rpc']
 
     web3_obj = create_connection(rpc)
@@ -262,7 +394,16 @@ def get_event_emitter_contract(chain):
     )
 
 
-def get_datastore_contract(chain):
+def get_datastore_contract(chain: str):
+    """
+    Get a datastore contract web3_obj for a given chain
+
+    Parameters
+    ----------
+    chain : str
+        avalanche or arbitrum.
+
+    """
     rpc = get_config()[chain]['rpc']
 
     web3_obj = create_connection(rpc)
@@ -273,7 +414,16 @@ def get_datastore_contract(chain):
     )
 
 
-def get_exchange_router_contract(chain):
+def get_exchange_router_contract(chain: str):
+    """
+    Get a exchange router contract web3_obj for a given chain
+
+    Parameters
+    ----------
+    chain : str
+        avalanche or arbitrum.
+
+    """
     rpc = get_config()[chain]['rpc']
 
     web3_obj = create_connection(rpc)
@@ -284,7 +434,16 @@ def get_exchange_router_contract(chain):
     )
 
 
-def create_signer(chain):
+def create_signer(chain: str):
+    """
+    Creastea a signer for a given chain
+
+    Parameters
+    ----------
+    chain : str
+        avalanche or arbitrum.
+
+    """
     config = get_config()
 
     private_key = config['private_key']
@@ -294,50 +453,60 @@ def create_signer(chain):
     return web3_obj.eth.account.from_key(private_key)
 
 
-def create_hash(data_type_list, data_value_list):
+def create_hash(data_type_list: list, data_value_list: list):
+    """
+    Create a keccak hash using a list of strings corresponding to data types
+    and a list of the values the data types match
+
+    Parameters
+    ----------
+    data_type_list : list
+        list of data types as strings.
+    data_value_list : list
+        list of values as strings.
+
+    Returns
+    -------
+    bytes
+        encoded hashed key .
+
+    """
     byte_data = encode(data_type_list, data_value_list)
     return Web3.keccak(byte_data)
 
 
-def create_hash_string(string):
+def create_hash_string(string: str):
+    """
+    Value to hash
+
+    Parameters
+    ----------
+    string : str
+        string to hash.
+
+    Returns
+    -------
+    bytes
+        hashed string.
+
+    """
     return create_hash(["string"], [string])
 
 
-def funding_fee_from_consensus(oi_imbalance, initial_oi, position, consensus):
-    funding_factor = 0.00000002
-    funding_exponent_factor = 1
+def get_execution_price_and_price_impact(chain: str, params: dict, decimals: int):
+    """
+    Get the execution price and price impact for a position
 
-    funding_factor_per_second = funding_factor
-    oi_imbalance = oi_imbalance + (position if consensus else -1*position)
-    funding_exponent_factor = funding_exponent_factor
-    total_OI = initial_oi + position
+    Parameters
+    ----------
+    chain : str
+        arbitrum or avalanche.
+    params : dict
+        dictionary of the position parameters.
+    decimals : int
+        number of decimals of the token being traded eg ETH == 18.
 
-    funding_fee_per_second = (funding_factor_per_second*oi_imbalance **
-                              funding_exponent_factor) / total_OI
-    funding_fee_hour = funding_fee_per_second * 3600
-
-    return funding_fee_hour
-
-
-def funding_fee_to_contrarian(initial_oi, oi_imbalance, position, consensus):
-    ffh = funding_fee_from_consensus(
-        oi_imbalance,
-        initial_oi,
-        position,
-        consensus
-    )
-    OI_dominant = (
-        initial_oi + oi_imbalance
-    ) / 2 + (position if consensus else 0)
-    OI_nondominant = (
-        initial_oi - oi_imbalance
-    ) / 2 + (position if not consensus else 0)
-    ffh_to_contrarian = ffh * (OI_dominant/OI_nondominant)
-
-    return ffh_to_contrarian
-
-
-def get_execution_price_and_price_impact(chain, params, decimals):
+    """
 
     reader_contract_obj = get_reader_contract(chain)
 
@@ -355,7 +524,19 @@ def get_execution_price_and_price_impact(chain, params, decimals):
             'price_impact_usd': output[0] / 10**PRECISION}
 
 
-def get_estimated_swap_output(chain, params, decimals):
+def get_estimated_swap_output(chain: str, params: dict):
+    """
+    For a given chain and requested swap get the amount of tokens
+    out and the price impact the swap will have.
+
+    Parameters
+    ----------
+    chain : str
+        arbitrum or avalanche.
+    params : dict
+        dictionary of the swap parameters.
+
+    """
 
     reader_contract_obj = get_reader_contract(chain)
 
@@ -391,7 +572,20 @@ decrease_position_swap_type = {
 }
 
 
-def find_dictionary_by_key_value(outer_dict, key, value):
+def find_dictionary_by_key_value(outer_dict: dict, key: str, value: str):
+    """
+    For a given dictionary, find a value which matches a set of keys
+
+    Parameters
+    ----------
+    outer_dict : dict
+        dictionary to filter through.
+    key : str
+        keys to search for.
+    value : str
+        required key to match.
+
+    """
     for inner_dict in outer_dict.values():
         if key in inner_dict and inner_dict[key] == value:
             return inner_dict
@@ -409,12 +603,28 @@ def get_funding_factor_per_period(market_info: dict,
                                   is_long: bool,
                                   period_in_seconds: int,
                                   long_interest_usd: int,
-                                  short_interest_usd: int,
+                                  short_interest_usd: int
                                   ):
+    """
+    For a given market, calculate the funding factor for a given period
+
+    Parameters
+    ----------
+    market_info : dict
+        market parameters returned from the reader contract.
+    is_long : bool
+        direction of the position.
+    period_in_seconds : int
+        Want percentage rate we want to output to be in.
+    long_interest_usd : int
+        expanded decimal long interest.
+    short_interest_usd : int
+        expanded decimal short interest.
+
+    """
 
     funding_factor_per_second = market_info['funding_factor_per_second']*10**-28
 
-    # print(funding_factor_per_second)
     long_pays_shorts = market_info['is_long_pays_short']
 
     if is_long:
@@ -444,7 +654,18 @@ def get_funding_factor_per_period(market_info: dict,
     return factor_per_second * period_in_seconds
 
 
-def save_json_file_to_datastore(filename, data):
+def save_json_file_to_datastore(filename: str, data: dict):
+    """
+    Save a dictionary as json file to the datastore directory
+
+    Parameters
+    ----------
+    filename : str
+        filename of json.
+    data : dict
+        dictionary of data.
+
+    """
 
     filepath = os.path.join(
         base_dir,
@@ -457,6 +678,15 @@ def save_json_file_to_datastore(filename, data):
 
 
 def make_timestamped_dataframe(data):
+    """
+    Add a new column to a given dataframe with a column for timestamp
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        dataframe to add timestamp column to.
+
+    """
 
     dataframe = pd.DataFrame(data, index=[0])
     dataframe['timestamp'] = datetime.now()
@@ -464,7 +694,18 @@ def make_timestamped_dataframe(data):
     return dataframe
 
 
-def save_csv_to_datastore(filename, dataframe):
+def save_csv_to_datastore(filename: str, dataframe):
+    """
+    For a given filename, save pandas dataframe as a csv to datastore
+
+    Parameters
+    ----------
+    filename : str
+        name of file.
+    dataframe : pd.DataFrame
+        pandas dataframe
+
+    """
 
     archive_filepath = os.path.join(
         base_dir,
@@ -491,7 +732,28 @@ def save_csv_to_datastore(filename, dataframe):
     )
 
 
-def determine_swap_route(markets, in_token, out_token):
+def determine_swap_route(markets: dict, in_token: str, out_token: str):
+    """
+    Using the available markets, find the list of GMX markets required
+    to swap from token in to token out
+
+    Parameters
+    ----------
+    markets : dict
+        dictionary of markets output by getMarketInfo.
+    in_token : str
+        contract address of in token.
+    out_token : str
+        contract address of out token.
+
+    Returns
+    -------
+    list
+        list of GMX markets to swap through.
+    is_requires_multi_swap : TYPE
+        requires more than one market to pass thru.
+
+    """
 
     if in_token == "0xaf88d065e77c8cC2239327C5EDb3A432268e5831":
         gmx_market_address = find_dictionary_by_key_value(

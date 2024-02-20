@@ -243,7 +243,7 @@ if __name__ == "__main__":
         "slippage_percent": 0.003
     }
 
-    order_parameters = OrderArgumentParser(is_increase=True).process_parameters_dictionary(parameters)
+    order_parameters = OrderArgumentParser().process_parameters_dictionary(parameters)
 
     try:
         stats = check_if_viable_farming_strategy(
@@ -253,14 +253,13 @@ if __name__ == "__main__":
     except Exception as e:
         raise Exception('Position not viable, reason: "{}"'.format(e))
 
-
     order = IncreaseOrder(
         chain=order_parameters['chain'],
         market_key=order_parameters['market_key'],
         collateral_address=order_parameters['start_token_address'],
         index_token_address=order_parameters['index_token_address'],
         is_long=order_parameters['is_long'],
-        size_delta=order_parameters['size_delta'],
+        size_delta_usd=order_parameters['size_delta'],
         initial_collateral_delta_amount=order_parameters['initial_collateral_delta'],
         slippage_percent=order_parameters['slippage_percent'],
         swap_path=order_parameters['swap_path']

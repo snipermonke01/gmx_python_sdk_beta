@@ -15,13 +15,44 @@ from .gmx_utils import create_connection
 from .gmx_utils import base_dir, get_config
 
 
-def check_if_approved(chain, spender, token_to_approve, amount_of_tokens_to_spend, approve):
+def check_if_approved(
+        chain: str,
+        spender: str,
+        token_to_approve: str,
+        amount_of_tokens_to_spend: int,
+        approve: bool):
+    """
+    For a given chain, check if a given amount of tokens is approved for spend by a contract, and
+    approve is passed as true
+
+    Parameters
+    ----------
+    chain : str
+        arbitrum or avalanche.
+    spender : str
+        contract address of the requested spender.
+    token_to_approve : str
+        contract address of token to spend.
+    amount_of_tokens_to_spend : int
+        amount of tokens to spend in expanded decimals.
+    approve : bool
+        Pass as True if we want to approve spend incase it is not already.
+
+    Raises
+    ------
+    Exception
+        Insufficient balance or token not approved for spend.
+
+    """
 
     config = get_config()
     connection = create_connection(chain=chain)
 
     spender_checksum_address = Web3.to_checksum_address(spender)
+
+    # User wallet address will be taken from config file
     user_checksum_address = Web3.to_checksum_address(config['user_wallet_address'])
+
     token_checksum_address = Web3.to_checksum_address(token_to_approve)
 
     token_contract_abi = json.load(open(os.path.join(base_dir,
@@ -48,6 +79,7 @@ def check_if_approved(chain, spender, token_to_approve, amount_of_tokens_to_spen
         user_checksum_address,
         spender_checksum_address
     ).call()
+
     print("Checking coins for approval..")
     if amount_approved < amount_of_tokens_to_spend and approve:
 

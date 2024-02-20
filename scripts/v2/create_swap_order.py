@@ -66,12 +66,9 @@ class SwapOrder(Order):
             'ui_fee_receiver': "0x0000000000000000000000000000000000000000"
         }
 
-        decimals = market['market_metadata']['decimals']
-
         estimated_swap_output = get_estimated_swap_output(
             self.chain,
-            estimated_swap_output_parameters,
-            decimals
+            estimated_swap_output_parameters
         )
 
         return estimated_swap_output
